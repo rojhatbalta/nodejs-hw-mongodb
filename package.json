@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-hw-mongodb",
+  "version": "1.0.0",
+  "description": "Go-IT NodeJs Homework MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.20.1",
+    "mongodb": "^6.13.0",
+    "mongoose": "^8.10.1",
+    "nodemon": "^3.1.9",
+    "pino-http": "^10.4.0"
+  }
+}
