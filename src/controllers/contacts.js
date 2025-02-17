@@ -6,16 +6,36 @@ import {
   updateContact,
   deleteContact,
 } from '../services/contacts.js';
+import { paginationParse } from '../utils/paginationParse.js';
+import { sortParse } from '../utils/sortParse.js';
+import { filterParse } from '../utils/filterParse.js';
 
 export const getSendAllContacts = async (req, res) => {
-  const contacts = await getAllContacts();
+  const { page, perPage } = paginationParse(req.query);
+  const { sortBy, sortOrder } = sortParse(req.query);
+  const filter = filterParse(req.query);
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
   if (!contacts) {
     createHttpError(404, 'No contacts found');
   }
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
-    data: contacts,
+    data: {
+      data: contacts.data,
+      page: contacts.page,
+      perpage: contacts.perPage,
+      totalItems: contacts.totalItems,
+      totalPages: contacts.totalPages,
+      hasPrevioursPage: contacts.hasPreviousPage,
+      hasNextPage: contacts.hasNextPage,
+    },
   });
 };
 
@@ -44,7 +64,6 @@ export const createSendContact = async (req, res, next) => {
 export const updateSendContact = async (req, res, next) => {
   const { contactId } = req.params;
   const result = await updateContact(contactId, req.body);
-
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
     return;
