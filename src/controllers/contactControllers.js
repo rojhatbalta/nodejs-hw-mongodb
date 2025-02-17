@@ -19,7 +19,6 @@ export const getSendContactById = async (req, res) => {
       data: contact,
     });
   }
-
   res.status(404).json({
     message: 'Contact not found',
   });
