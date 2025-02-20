@@ -2,10 +2,10 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { env } from './utils/env.js';
-import allRouters from './routers/allRouters.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { ctrlWrapper } from './utils/ctrlWrapper.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import allRouters from './routers/allRouters.js';
 import cookieParser from 'cookie-parser';
 
 const PORT = Number(env('PORT', 3000));
