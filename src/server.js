@@ -1,12 +1,13 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import allRouters from './routers/allRouters.js';
 import { env } from './utils/env.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { ctrlWrapper } from './utils/ctrlWrapper.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-import allRouters from './routers/allRouters.js';
-import cookieParser from 'cookie-parser';
+import { uploadDir } from './constants/dir.js';
 
 const PORT = Number(env('PORT', 3000));
 const app = express();
@@ -26,6 +27,7 @@ export const setupServer = () => {
     }),
   );
   app.use(cookieParser());
+  app.use('/uploads', express.static(uploadDir));
   app.use(allRouters);
   app.use('*', ctrlWrapper(notFoundHandler));
   app.use(errorHandler);

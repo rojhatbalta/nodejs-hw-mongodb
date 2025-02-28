@@ -9,6 +9,9 @@ import {
 import { paginationParse } from '../utils/paginationParse.js';
 import { sortParse } from '../utils/sortParse.js';
 import { filterParse } from '../utils/filterParse.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { saveFileToUpload } from '../utils/saveFileToUpload.js';
+import { env } from '../utils/env.js';
 
 export const getSendAllContacts = async (req, res) => {
   const { page, perPage } = paginationParse(req.query);
@@ -53,7 +56,17 @@ export const getSendContactById = async (req, res, next) => {
 };
 
 export const createSendContact = async (req, res, next) => {
-  const contact = await createContact(req.body);
+  const photo = req.file;
+  let photoURL;
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoURL = await saveFileToCloudinary(photo);
+    } else {
+      photoURL = await saveFileToUpload(photo);
+    }
+  }
+  const newContact = { ...req.body, photoURL, userId: req.user._id };
+  const contact = await createContact(newContact);
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
@@ -63,7 +76,20 @@ export const createSendContact = async (req, res, next) => {
 
 export const updateSendContact = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await updateContact(contactId, req.body);
+  const photo = req.file;
+  const userId = req.user._id;
+  let photoURL;
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoURL = await saveFileToCloudinary(photo);
+    } else {
+      photoURL = await saveFileToUpload(photo);
+    }
+  }
+  const result = await updateContact(contactId, userId, {
+    ...req.body,
+    photoURL,
+  });
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
     return;
@@ -77,7 +103,8 @@ export const updateSendContact = async (req, res, next) => {
 
 export const deleteSendContact = async (req, res, next) => {
   const { contactId } = req.params;
-  const contact = await deleteContact(contactId);
+  const userId = req.user._id;
+  const contact = await deleteContact(contactId, userId);
   if (!contact) {
     next(createHttpError(404, 'Contact not found'));
     return;
