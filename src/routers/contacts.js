@@ -13,29 +13,25 @@ import {
   updateContactSchema,
 } from '../validation/contacts.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { authenticate } from '../middlewares/authenticate.js';
+import { upload } from '../middlewares/multer.js';
 
 const routerContacts = Router();
-routerContacts.get('/contacts', ctrlWrapper(getSendAllContacts));
-routerContacts.get(
-  '/contacts/:contactId',
-  isValidId,
-  ctrlWrapper(getSendContactById),
-);
-routerContacts.post(
-  '/contacts',
-  validateBody(createContactSchema),
-  ctrlWrapper(createSendContact),
-);
+routerContacts.use(authenticate);
+routerContacts.get('/', ctrlWrapper(getSendAllContacts));
+routerContacts.get('/:contactId', isValidId, ctrlWrapper(getSendContactById));
 routerContacts.patch(
-  '/contacts/:contactId',
+  '/:contactId',
   isValidId,
   validateBody(updateContactSchema),
   ctrlWrapper(updateSendContact),
 );
-routerContacts.delete(
-  '/contacts/:contactId',
-  isValidId,
-  ctrlWrapper(deleteSendContact),
+routerContacts.delete('/:contactId', isValidId, ctrlWrapper(deleteSendContact));
+routerContacts.post(
+  '/',
+  upload.single('photo'),
+  validateBody(createContactSchema),
+  ctrlWrapper(createSendContact),
 );
 
 export default routerContacts;
