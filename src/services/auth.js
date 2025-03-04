@@ -94,10 +94,7 @@ export const requestResetToken = async (email) => {
       expiresIn: '5m',
     },
   );
-  const resetPasswordTemplatePath = path.join(
-    templatesDir,
-    'reset-password-email.html',
-  );
+  const resetPasswordTemplatePath = path.join(templatesDir, 'reset.html');
   const templateSource = (
     await fs.readFile(resetPasswordTemplatePath)
   ).toString();

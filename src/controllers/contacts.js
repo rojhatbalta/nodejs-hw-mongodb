@@ -46,7 +46,7 @@ export const getSendContactById = async (req, res, next) => {
   const id = req.params.contactId;
   const contact = await getContactsById(id);
   if (!contact) {
-    createHttpError(404, 'bulamadım baba');
+    createHttpError(404, 'No contacts found');
   }
   return res.status(200).json({
     status: 200,
