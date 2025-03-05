@@ -8,6 +8,7 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { ctrlWrapper } from './utils/ctrlWrapper.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { uploadDir } from './constants/dir.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const PORT = Number(env('PORT', 3000));
 const app = express();
@@ -28,6 +29,7 @@ export const setupServer = () => {
   );
   app.use(cookieParser());
   app.use('/uploads', express.static(uploadDir));
+  app.use('/api-docs', swaggerDocs());
   app.use(allRouters);
   app.use('*', ctrlWrapper(notFoundHandler));
   app.use(errorHandler);
