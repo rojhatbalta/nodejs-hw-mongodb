@@ -1,7 +1,9 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-export const tempUploadDir = path.join(process.cwd(), 'temp');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-export const uploadDir = path.join(process.cwd(), 'upload');
-
-export const templatesDir = path.join(process.cwd(), 'src', 'templates');
+export const tempUploadDir = path.join(__dirname, '..', 'temp');
+export const uploadDir = path.join(__dirname, '..', 'upload');
+export const templatesDir = path.join(__dirname, 'templates');
