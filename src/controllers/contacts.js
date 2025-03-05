@@ -44,7 +44,8 @@ export const getSendAllContacts = async (req, res) => {
 
 export const getSendContactById = async (req, res, next) => {
   const id = req.params.contactId;
-  const contact = await getContactsById(id);
+  const userId = req.user._id;
+  const contact = await getContactsById(id, userId);
   if (!contact) {
     createHttpError(404, 'No contacts found');
   }

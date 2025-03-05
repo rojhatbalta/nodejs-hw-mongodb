@@ -23,6 +23,7 @@ routerContacts.get('/:contactId', isValidId, ctrlWrapper(getSendContactById));
 routerContacts.patch(
   '/:contactId',
   isValidId,
+  upload.single('photo'),
   validateBody(updateContactSchema),
   ctrlWrapper(updateSendContact),
 );
